@@ -1,10 +1,18 @@
+<<<<<<< HEAD
 ﻿<!DOCTYPE html>
+=======
+<!DOCTYPE html>
+>>>>>>> 21d6dd17f1e6aea440cf808afff35f2cffb4b97b
 <html lang="en">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+<<<<<<< HEAD
     <title>MonoSpec // Object Archive v0.1</title>
+=======
+    <title>MonoSpec // Object Archive</title>
+>>>>>>> 21d6dd17f1e6aea440cf808afff35f2cffb4b97b
     <style>
         :root {
             --bg: #0a0f0a;
@@ -118,7 +126,10 @@
             cursor: pointer;
             user-select: none;
             letter-spacing: .08em;
+<<<<<<< HEAD
             color: var(--accent);
+=======
+>>>>>>> 21d6dd17f1e6aea440cf808afff35f2cffb4b97b
         }
 
         .tab.active {
@@ -290,6 +301,7 @@
             max-height: 90%;
         }
 
+<<<<<<< HEAD
         .viewer canvas.stl-canvas {
             width: 100%;
             height: 100%;
@@ -298,6 +310,8 @@
             display: block;
         }
 
+=======
+>>>>>>> 21d6dd17f1e6aea440cf808afff35f2cffb4b97b
         .viewer .scanlines::after {
             content: "";
             position: absolute;
@@ -431,7 +445,11 @@
     <div class="app">
         <header class="topbar">
             <div class="brand"><span class="dot"></span><span class="title ca">MONOSPEC // OBJECT ARCHIVE</span></div>
+<<<<<<< HEAD
             <div class="controls"><span>UP/DOWN Select</span><span>ENTER Play/Pause</span><span>F Fullscreen</span><span>Type to
+=======
+            <div class="controls"><span>↑/↓ Select</span><span>⏎ Play/Pause</span><span>F Fullscreen</span><span>Type to
+>>>>>>> 21d6dd17f1e6aea440cf808afff35f2cffb4b97b
                     Filter</span></div>
         </header>
 
@@ -444,7 +462,11 @@
 
         <main class="stage">
             <section class="card" id="assetCard">
+<<<<<<< HEAD
                 <div class="heading ca">VISUAL // <span class="muted">ROTATION FEED</span> <span class="blink">REC</span>
+=======
+                <div class="heading ca">VISUAL // <span class="muted">ROTATION FEED</span> <span class="blink">▮</span>
+>>>>>>> 21d6dd17f1e6aea440cf808afff35f2cffb4b97b
                 </div>
                 <div class="viewer">
                     <div class="plane scanlines vignette" id="assetPlane" aria-live="polite"
@@ -459,7 +481,11 @@
                         <div class="k">Status</div>
                         <div class="v">No selection.</div>
                         <div class="k">Hint</div>
+<<<<<<< HEAD
                         <div class="v">Use UP/DOWN to navigate, ENTER to play/pause.</div>
+=======
+                        <div class="v">Use ↑/↓ to navigate, ⏎ to play/pause.</div>
+>>>>>>> 21d6dd17f1e6aea440cf808afff35f2cffb4b97b
                     </div>
                 </div>
             </section>
@@ -473,7 +499,270 @@
         </footer>
     </div>
 
+<<<<<<< HEAD
     <script src="monospec-app.js"></script>
+=======
+    <script>
+        // MonoSpec v0.2 — Phase 2: External data + collections/tabs
+        // --------------------------------------------------
+        // DATA LOADING
+        // --------------------------------------------------
+        // Expected external file: monospec-data.json
+        // Shape: { collections: [{ id, name, items: [...] }] }
+        // Each item matches the old schema { id, name, tags, thumb, asset:{type, ...}, description, details, specs }
+
+        const SAMPLE_DATA = {
+            collections: [
+                {
+                    id: 'handhelds', name: 'Handhelds',
+                    items: [
+                        {
+                            id: 'R36S-GRN',
+                            name: 'Anbernic R36S — Transparent Green',
+                            thumb: 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg',
+                            tags: ['anbernic', 'r36s', 'rk3326', 'retro'],
+                            asset: { type: 'webm', src: 'assets/sample-rotor.webm' },
+                            description: 'Compact retro handheld with dual sticks and translucent shell.',
+                            details: { Year: '2023', Chipset: 'RK3326', Display: '3.5" 640×480 IPS', OS: 'Linux' },
+                            specs: { Dimensions: '145×74×20mm', Battery: '3200 mAh' }
+                        }
+                    ]
+                },
+                {
+                    id: 'bags', name: 'Bags',
+                    items: [
+                        {
+                            id: 'BAG-01', name: 'Shoulder Sling — Tech Grey',
+                            thumb: 'https://upload.wikimedia.org/wikipedia/commons/3/3f/Placeholder_view_vector.svg',
+                            tags: ['carry', 'daily'], asset: { type: 'img', src: 'assets/sample-bag.png' },
+                            description: 'Compact EDC sling for handhelds and cables.',
+                            details: { Capacity: '3L', Material: 'Ripstop' }, specs: { Compartments: '3' }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        async function loadData() {
+            try {
+                const res = await fetch('monospec-data.json', { cache: 'no-store' });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const json = await res.json();
+                validateData(json);
+                return json;
+            } catch (e) {
+                console.warn('[MonoSpec] Falling back to SAMPLE_DATA:', e.message);
+                validateData(SAMPLE_DATA);
+                return SAMPLE_DATA;
+            }
+        }
+
+        function validateData(data) {
+            if (!data || !Array.isArray(data.collections)) throw new Error('Invalid data: missing collections');
+            // quick duplicate id check across all items
+            const ids = new Set();
+            for (const col of data.collections) {
+                if (!col.id) throw new Error('Collection missing id');
+                for (const it of (col.items || [])) {
+                    if (!it.id) throw new Error('Item missing id');
+                    if (ids.has(it.id)) console.warn('[MonoSpec] Duplicate item id:', it.id);
+                    ids.add(it.id);
+                }
+            }
+        }
+
+        // --------------------------------------------------
+        // STATE
+        // --------------------------------------------------
+        const ui = {
+            tabs: document.getElementById('tabs'),
+            list: document.getElementById('list'),
+            filter: document.getElementById('filterInput'),
+            plane: document.getElementById('assetPlane'),
+            details: document.getElementById('detailBody'),
+            statusText: document.getElementById('statusText'),
+            led: document.getElementById('led'),
+            profileCount: document.getElementById('profileCount'),
+            collectionCount: document.getElementById('collectionCount'),
+        };
+
+        const state = {
+            data: null,
+            currentCol: null,   // collection id
+            filtered: [],       // items in current collection after filter
+            index: 0,
+        };
+
+        function setStatus(text, good = false) {
+            ui.statusText.textContent = text;
+            ui.led.style.background = good ? 'var(--accent)' : 'var(--hud-dim)';
+            ui.led.style.boxShadow = good ? '0 0 10px var(--accent)' : '0 0 6px var(--hud-dim)';
+        }
+
+        // --------------------------------------------------
+        // RENDER: TABS (collections)
+        // --------------------------------------------------
+        function renderTabs() {
+            ui.tabs.innerHTML = '';
+            const cols = state.data.collections;
+            ui.collectionCount.textContent = cols.length;
+            cols.forEach(col => {
+                const b = document.createElement('button');
+                b.className = 'tab'; b.setAttribute('role', 'tab'); b.dataset.id = col.id; b.textContent = col.name;
+                b.addEventListener('click', () => selectCollection(col.id));
+                if (col.id === state.currentCol) b.classList.add('active');
+                ui.tabs.appendChild(b);
+            });
+        }
+
+        function selectCollection(id) {
+            state.currentCol = id;
+            renderTabs();
+            applyFilter(ui.filter.value || '');
+            setStatus('COLLECTION: ' + id, true);
+        }
+
+        // --------------------------------------------------
+        // RENDER: LIST
+        // --------------------------------------------------
+        function renderList() {
+            ui.list.innerHTML = '';
+            for (let i = 0; i < state.filtered.length; i++) {
+                const item = state.filtered[i];
+                const row = document.createElement('div');
+                row.className = 'list-item'; row.setAttribute('role', 'option'); row.dataset.index = i;
+                row.innerHTML = `
+          <img class="thumb" alt="${item.name} thumbnail" src="${item.thumb}" />
+          <div class="meta">
+            <div class="name">${item.name}</div>
+            <div class="id">${item.id}</div>
+            <div class="tags">${(item.tags || []).join(' • ')}</div>
+          </div>
+          <div class="muted">▶</div>`;
+                row.addEventListener('click', () => selectIndex(i));
+                ui.list.appendChild(row);
+            }
+            ui.profileCount.textContent = state.filtered.length;
+            applyActiveRow();
+        }
+
+        function applyActiveRow() {
+            document.querySelectorAll('.list-item').forEach((el, idx) => {
+                el.classList.toggle('active', idx === state.index);
+                if (idx === state.index) el.scrollIntoView({ block: 'nearest' });
+            });
+        }
+
+        // --------------------------------------------------
+        // RENDER: DETAILS
+        // --------------------------------------------------
+        function renderDetails(item) {
+            const chips = (item.tags || []).map(t => `<span class="chip">${t}</span>`).join('');
+            const detailKV = Object.entries(item.details || {}).map(([k, v]) => `<div class="k">${k}</div><div class="v">${v}</div>`).join('');
+            const specsKV = Object.entries(item.specs || {}).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('');
+            ui.details.innerHTML = `
+        <div class="kv"><div class="k">Object</div><div class="v"><strong>${item.name}</strong></div><div class="k">ID</div><div class="v">${item.id}</div></div>
+        <div class="chips">${chips}</div>
+        <p class="mono">${item.description || ''}</p>
+        <div class="kv">${detailKV}</div>
+        <div class="specs"><h4 class="muted" style="margin:0 0 6px 0; text-transform: uppercase;">Specs</h4><dl>${specsKV}</dl></div>`;
+        }
+
+        // --------------------------------------------------
+        // RENDER: ASSET
+        // --------------------------------------------------
+        let currentPlayerCleanup = null;
+
+        function renderAsset(item) {
+            if (typeof currentPlayerCleanup === 'function') { currentPlayerCleanup(); currentPlayerCleanup = null; }
+            ui.plane.innerHTML = '';
+
+            const wrap = document.createElement('div');
+            Object.assign(wrap.style, { position: 'relative', display: 'grid', placeItems: 'center', width: '100%', height: '100%' });
+
+            const grid = document.createElement('div');
+            Object.assign(grid.style, { position: 'absolute', inset: '0', background: `linear-gradient(transparent 95%, var(--grid) 95%), linear-gradient(90deg, transparent 95%, var(--grid) 95%)`, backgroundSize: '100% 20px, 20px 100%', zIndex: '0' });
+            wrap.appendChild(grid);
+
+            let playerEl = null; const t = (item.asset || {}).type;
+            if (t === 'webm') {
+                const v = document.createElement('video');
+                v.src = item.asset.src; v.autoplay = true; v.loop = true; v.muted = true; v.playsInline = true; v.style.filter = 'drop-shadow(0 12px 24px var(--shadow))';
+                playerEl = v; wrap.appendChild(v); currentPlayerCleanup = () => { v.pause(); v.src = ''; v.load(); };
+            } else if (t === 'gif' || t === 'img') {
+                const img = document.createElement('img'); img.src = item.asset.src; img.alt = item.name; img.style.filter = 'drop-shadow(0 12px 24px var(--shadow))'; playerEl = img; wrap.appendChild(img);
+            } else if (t === 'pngseq') {
+                const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
+                let frame = 0; const { base, count, fps = 12 } = item.asset; const images = new Array(count); let rafId = null; let last = performance.now();
+                function pad(n, width = 4) { return String(n).padStart(width, '0'); }
+                for (let i = 0; i < count; i++) { const im = new Image(); im.decoding = 'async'; im.loading = 'eager'; im.onload = () => { if (!canvas.width && im.width) { canvas.width = im.width; canvas.height = im.height; } }; im.src = `${base}${pad(i + 1)}.png`; images[i] = im; }
+                function loop(ts) { const dt = ts - last; if (dt >= (1000 / fps)) { frame = (frame + 1) % count; last = ts; } ctx.clearRect(0, 0, canvas.width, canvas.height); const im = images[frame]; if (im && im.complete) ctx.drawImage(im, 0, 0); rafId = requestAnimationFrame(loop); }
+                function start() { if (!rafId) rafId = requestAnimationFrame(loop); } function stop() { if (rafId) cancelAnimationFrame(rafId); rafId = null; }
+                currentPlayerCleanup = () => { stop(); };
+                playerEl = canvas; wrap.appendChild(canvas); start();
+            } else { const fallback = document.createElement('div'); fallback.textContent = 'No asset configured.'; wrap.appendChild(fallback); }
+
+            const hudTL = document.createElement('div'); hudTL.textContent = 'CAM: ROTOR FEED 01'; Object.assign(hudTL.style, { position: 'absolute', left: '8px', top: '8px', fontSize: '11px', color: 'var(--hud-dim)' });
+            const hudBR = document.createElement('div'); hudBR.textContent = 'VIS CLR: ALPHA'; Object.assign(hudBR.style, { position: 'absolute', right: '8px', bottom: '8px', fontSize: '11px', color: 'var(--hud-dim)' });
+            wrap.appendChild(hudTL); wrap.appendChild(hudBR); ui.plane.appendChild(wrap);
+
+            ui.plane.onclick = () => { if (!playerEl) return; if (playerEl.tagName === 'VIDEO') { if (playerEl.paused) { playerEl.play(); setStatus('PLAY ▶', true); } else { playerEl.pause(); setStatus('PAUSE ▮▮'); } } };
+        }
+
+        // --------------------------------------------------
+        // SELECTION & FILTER
+        // --------------------------------------------------
+        function getCurrentCollection() { return state.data.collections.find(c => c.id === state.currentCol) || state.data.collections[0]; }
+
+        function selectIndex(idx) {
+            if (state.filtered.length === 0) return;
+            state.index = (idx + state.filtered.length) % state.filtered.length;
+            const item = state.filtered[state.index];
+            applyActiveRow(); renderAsset(item); renderDetails(item); setStatus(`SELECT ${item.id}`);
+        }
+
+        function applyFilter(q) {
+            const s = (q || '').trim().toLowerCase();
+            const col = getCurrentCollection();
+            const arr = col.items || [];
+            state.filtered = !s ? [...arr] : arr.filter(it => (
+                (it.name || '').toLowerCase().includes(s) || (it.id || '').toLowerCase().includes(s) || (it.tags || []).some(t => (t || '').toLowerCase().includes(s))
+            ));
+            state.index = 0; renderList(); selectIndex(0);
+        }
+
+        // --------------------------------------------------
+        // INPUTS
+        // --------------------------------------------------
+        window.addEventListener('keydown', (e) => {
+            const tag = (e.target && e.target.tagName) || '';
+            const inInput = tag === 'INPUT' || tag === 'TEXTAREA';
+            if (!inInput) {
+                if (e.key === 'ArrowDown') { e.preventDefault(); selectIndex(state.index + 1); }
+                if (e.key === 'ArrowUp') { e.preventDefault(); selectIndex(state.index - 1); }
+                if (e.key === 'Enter') { e.preventDefault(); document.getElementById('assetPlane').click(); }
+                if (e.key.toLowerCase() === 'f') { toggleFullscreen(); }
+            }
+        });
+
+        function toggleFullscreen() { const el = document.documentElement; if (!document.fullscreenElement) el.requestFullscreen().catch(() => { }); else document.exitFullscreen().catch(() => { }); }
+
+        // --------------------------------------------------
+        // INIT
+        // --------------------------------------------------
+        (async function init() {
+            state.data = await loadData();
+            state.currentCol = state.data.collections[0]?.id || null;
+            renderTabs();
+            ui.filter.addEventListener('input', (e) => applyFilter(e.target.value));
+            applyFilter('');
+
+            // Pause videos if viewer offscreen (saves CPU on long pages)
+            const io = new IntersectionObserver((entries) => { entries.forEach(en => { if (en.target.id === 'assetCard') { const videos = en.target.querySelectorAll('video'); videos.forEach(v => en.isIntersecting ? v.play().catch(() => { }) : v.pause()); } }); }, { threshold: 0.1 });
+            io.observe(document.getElementById('assetCard'));
+        })();
+    </script>
+>>>>>>> 21d6dd17f1e6aea440cf808afff35f2cffb4b97b
 </body>
 
 </html>

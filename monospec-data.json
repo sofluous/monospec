@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿{
   "collections": [
     {
@@ -96,4 +97,115 @@
       "items": []
     }
   ]
+=======
+{
+    "collections": [
+        {
+            "id": "handhelds",
+            "name": "Handhelds",
+            "items": [
+                {
+                    "id": "R36S-GRN",
+                    "name": "Anbernic R36S — Transparent Green",
+                    "thumb": "assets/r36s-thumb.webp",
+                    "tags": [
+                        "anbernic",
+                        "r36s",
+                        "rk3326",
+                        "retro"
+                    ],
+                    "asset": {
+                        "type": "webm",
+                        "src": "assets/r36s-rot-alpha.webm"
+                    },
+                    "description": "Compact retro handheld with dual sticks and translucent shell.",
+                    "details": {
+                        "Year": "2023",
+                        "Chipset": "RK3326",
+                        "Display": "3.5\" 640×480 IPS",
+                        "OS": "Linux"
+                    },
+                    "specs": {
+                        "Dimensions": "145×74×20mm",
+                        "Battery": "3200 mAh"
+                    }
+                },
+                                {
+                    "id": "R36S-ORG",
+                    "name": "Anbernic R36S — Transparent Orange",
+                    "thumb": "assets/r36s-thumb.webp",
+                    "tags": [
+                        "anbernic",
+                        "r36s",
+                        "rk3326",
+                        "retro"
+                    ],
+                    "asset": {
+                        "type": "webm",
+                        "src": "assets/r36s-rot-alpha.webm"
+                    },
+                    "description": "Compact retro handheld with dual sticks and translucent shell.",
+                    "details": {
+                        "Year": "2023",
+                        "Chipset": "RK3326",
+                        "Display": "3.5\" 640×480 IPS",
+                        "OS": "Linux"
+                    },
+                    "specs": {
+                        "Dimensions": "145×74×20mm",
+                        "Battery": "3200 mAh"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "bags",
+            "name": "Bags",
+            "items": [
+                {
+                    "id": "BAG-01",
+                    "name": "Shoulder Sling — Tech Grey",
+                    "thumb": "assets/bag-thumb.webp",
+                    "tags": [
+                        "carry",
+                        "daily"
+                    ],
+                    "asset": {
+                        "type": "img",
+                        "src": "assets/bag.png"
+                    },
+                    "description": "Compact EDC sling for handhelds and cables.",
+                    "details": {
+                        "Capacity": "3L",
+                        "Material": "Ripstop"
+                    },
+                    "specs": {
+                        "Compartments": "3"
+                    }
+                },
+                {
+                    "id": "BCL-17 (Ver.2)",
+                    "name": "Technical Tote — Black",
+                    "thumb": "assets/bag-thumb.webp",
+                    "tags": [
+                        "carry",
+                        "daily"
+                    ],
+                    "asset": {
+                        "type": "img",
+                        "src": "assets/bag.png"
+                    },
+                    "description": "Large technical EDC tote with an array of easy access pockets, durable nylon, and adjustable carry straps.",
+                    "details": {
+                        "Capacity": "L",
+                        "Material": "Ballistic Nylon"
+                    },
+                    "specs": {
+                        "Compartments": "3"
+                    }
+                }
+            ]
+        }
+    ]
+>>>>>>> 21d6dd17f1e6aea440cf808afff35f2cffb4b97b
 }
