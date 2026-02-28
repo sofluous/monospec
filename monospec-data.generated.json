@@ -1,0 +1,33 @@
+﻿{
+    "collections":  [
+                        {
+                            "id":  "print-models",
+                            "name":  "3D Print Models",
+                            "items":  [
+                                          {
+                                              "id":  "STL-HELLOKITTYPUS-001",
+                                              "name":  "Hello Kitty Octopus",
+                                              "thumb":  "",
+                                              "tags":  [
+                                                           "3d-print",
+                                                           "stl",
+                                                           "calibration"
+                                                       ],
+                                              "asset":  {
+                                                            "type":  "stl",
+                                                            "src":  "assets/models/hello-kitty-octopus.stl"
+                                                        },
+                                              "description":  "Basic dimensional calibration cube.",
+                                              "details":  {
+                                                              "Designer":  "Internal",
+                                                              "Printer":  "A1 Mini"
+                                                          },
+                                              "specs":  {
+                                                            "Material":  "PLA",
+                                                            "LayerHeight":  "0.2mm"
+                                                        }
+                                          }
+                                      ]
+                        }
+                    ]
+}
